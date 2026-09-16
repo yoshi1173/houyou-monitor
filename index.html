@@ -1,19 +1,193 @@
-<!doctype html><html lang='ja'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>本日のご法要 管理システム</title><style>
-:root{--ink:#20252a;--muted:#6d716d;--paper:#f7f4ed;--line:#d9d2c4;--green:#3f6256;--gold:#a58a55;--rose:#806260;--navy:#525b70}*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Yu Mincho','Hiragino Mincho ProN','Yu Gothic',sans-serif;color:var(--ink);background:#ebe8e1}button,input,select{font:inherit}.app{min-height:100vh}.top{height:64px;background:#20272a;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 22px}.top b{font-size:21px}.tabs button{border:0;padding:10px 16px;border-radius:8px;margin-left:8px;cursor:pointer}.tabs .active{background:#fff;color:#222}.wrap{max-width:1450px;margin:auto;padding:22px}.panel{background:#fff;border-radius:14px;box-shadow:0 3px 18px #0001;padding:20px;margin-bottom:18px}.row{display:flex;gap:14px;align-items:end;flex-wrap:wrap}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:13px;color:#666;font-weight:700}.field input,.field select{border:1px solid #cfcfcf;border-radius:8px;padding:10px 12px;background:white;min-height:43px}.field.name input{width:170px}.suffix{display:flex;align-items:center;gap:8px}.suffix span{font-size:19px;font-weight:700}.btn{border:0;border-radius:8px;padding:11px 18px;font-weight:700;cursor:pointer}.primary{background:#405e53;color:white}.ghost{background:#eee}.danger{background:#f4e3e3;color:#8a3333}.datebox{display:flex;align-items:center;justify-content:space-between;gap:20px}.datebox input{font-size:17px;padding:9px}.hint{color:#777;font-size:13px}.hall{border:1px solid var(--line);border-radius:11px;overflow:hidden;margin-top:15px}.hallhead{padding:11px 15px;color:#fff;font-weight:800;display:flex;justify-content:space-between}.h1{background:var(--navy)}.h2{background:var(--green)}.h3{background:var(--rose)}.h4{background:var(--gold)}table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid #eee;text-align:left}th{background:#fafafa;font-size:13px}.actions button{margin-right:5px;padding:6px 9px;border:0;border-radius:6px;cursor:pointer}.empty{text-align:center;color:#999;padding:15px}.monitor{display:none;background:var(--paper);min-height:calc(100vh - 64px);position:relative;overflow:hidden}.monitor:before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 8% 90%,#b8c8b733 0 8%,transparent 9%),linear-gradient(120deg,transparent 65%,#c6aa7030 66%,transparent 68%);pointer-events:none}.screen{position:relative;max-width:1600px;margin:auto;padding:35px 55px}.screenTitle{display:flex;justify-content:space-between;align-items:start;border-bottom:1px solid #c7b78f;padding-bottom:14px;margin-bottom:24px}.screenTitle h1{font-family:'Yu Mincho','Hiragino Mincho ProN',serif;font-size:56px;margin:0;font-weight:600}.screenDate{font-family:'Yu Mincho',serif;font-size:30px}.screenSub{font-size:15px;margin-top:8px;color:#555}.grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.card{background:#ffffffd9;border:1px solid #d9d3c8;border-radius:7px;overflow:hidden;box-shadow:0 2px 9px #00000012}.card h2{color:#fff;margin:0;padding:13px 22px;font-family:'Yu Mincho',serif;font-size:31px}.card table th,.card table td{text-align:center;font-family:'Yu Mincho',serif;font-size:24px;padding:12px}.card table th{font-size:18px;font-weight:500}.foot{text-align:right;margin-top:25px;font-family:'Yu Mincho',serif;color:#555}.hidden{display:none!important}@media(max-width:800px){.grid{grid-template-columns:1fr}.screen{padding:20px}.screenTitle h1{font-size:36px}.screenDate{font-size:20px}.card table td{font-size:18px}.wrap{padding:10px}}
-</style></head><body><div class='app'><div class='top'><b>本日のご法要｜管理システム</b><div class='tabs'><button id='adminTab' class='active'>管理画面</button><button id='previewTab'>モニター表示</button></div></div>
-<main id='admin' class='wrap'><section class='panel'><div class='datebox'><div><h2 style='margin:0 0 6px'>表示日の設定</h2><div class='hint'>毎日の予定を日付ごとに保存できます。</div></div><input type='date' id='date'></div></section>
-<section class='panel'><h2 style='margin-top:0'>予定を登録</h2><div class='row'><div class='field'><label>会場</label><select id='hall'><option>第一会場</option><option>第二会場</option><option>第三会場</option><option>とこしえ</option></select></div><div class='field'><label>用途</label><select id='purpose'><option>建墓</option><option>埋葬</option><option>建墓・埋葬</option><option>年回</option><option>納骨</option></select></div><div class='field'><label>時間</label><input type='time' id='time' step='900'></div><div class='field name'><label>喪家名（「家」は自動表示）</label><div class='suffix'><input id='family' placeholder='例：山田'><span>家</span></div></div><button type='button' class='btn primary' id='add'>＋ 予定を追加</button><div id='msg' style='width:100%;font-weight:700;color:#315d4e;margin-top:4px'></div></div></section>
-<section class='panel'><div class='row' style='justify-content:space-between'><div><h2 style='margin:0'>当日の予定</h2><div class='hint'>変更内容はこの端末に自動保存されます。</div></div><div><button class='btn ghost' id='copyPrev'>前日をコピー</button> <button class='btn danger' id='clear'>全件クリア</button></div></div><div id='lists'></div></section></main>
-<main id='monitor' class='monitor'><div class='screen'><div class='screenTitle'><h1>本日のご法要</h1><div><div id='screenDate' class='screenDate'></div><div class='screenSub'>故人を偲び　心を込めてお手伝いいたします</div></div></div><div class='grid' id='cards'></div><div class='foot'>大切な方のご縁を、これからもずっと。</div></div></main></div>
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>本日のご法要 管理システム</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--ink:#20252a;--muted:#6d716d;--paper:#f7f4ed;--line:#d9d2c4;--green:#3f6256;--gold:#a58a55;--rose:#806260;--navy:#525b70}*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Yu Mincho','Hiragino Mincho ProN','Yu Gothic',sans-serif;color:var(--ink);background:#ebe8e1}button,input,select{font:inherit}.app{min-height:100vh}.top{min-height:64px;background:#20272a;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:10px 22px;gap:12px;flex-wrap:wrap}.top b{font-size:21px}.tabs{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.tabs button{border:0;padding:10px 16px;border-radius:8px;cursor:pointer}.tabs .active{background:#fff;color:#222}.wrap{max-width:1450px;margin:auto;padding:22px}.panel{background:#fff;border-radius:14px;box-shadow:0 3px 18px #0001;padding:20px;margin-bottom:18px}.row{display:flex;gap:14px;align-items:end;flex-wrap:wrap}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:13px;color:#666;font-weight:700}.field input,.field select{border:1px solid #cfcfcf;border-radius:8px;padding:10px 12px;background:white;min-height:43px}.field.name input{width:170px}.suffix{display:flex;align-items:center;gap:8px}.suffix span{font-size:19px;font-weight:700}.btn{border:0;border-radius:8px;padding:11px 18px;font-weight:700;cursor:pointer}.primary{background:#405e53;color:white}.ghost{background:#eee}.danger{background:#f4e3e3;color:#8a3333}.datebox{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}.datebox input{font-size:17px;padding:9px}.hint{color:#777;font-size:13px}.hall{border:1px solid var(--line);border-radius:11px;overflow:hidden;margin-top:15px}.hallhead{padding:11px 15px;color:#fff;font-weight:800;display:flex;justify-content:space-between}.h1{background:var(--navy)}.h2{background:var(--green)}.h3{background:var(--rose)}.h4{background:var(--gold)}table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid #eee;text-align:left}th{background:#fafafa;font-size:13px}.actions button{margin-right:5px;padding:6px 9px;border:0;border-radius:6px;cursor:pointer}.empty{text-align:center;color:#999;padding:15px}.monitor{display:none;background:var(--paper);min-height:calc(100vh - 64px);position:relative;overflow:hidden}.monitor:before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 8% 90%,#b8c8b733 0 8%,transparent 9%),linear-gradient(120deg,transparent 65%,#c6aa7030 66%,transparent 68%);pointer-events:none}.screen{position:relative;max-width:1600px;margin:auto;padding:35px 55px}.screenTitle{display:flex;justify-content:space-between;align-items:start;border-bottom:1px solid #c7b78f;padding-bottom:14px;margin-bottom:24px;gap:20px}.screenTitle h1{font-family:'Yu Mincho','Hiragino Mincho ProN',serif;font-size:56px;margin:0;font-weight:600}.screenDate{font-family:'Yu Mincho',serif;font-size:30px}.screenSub{font-size:15px;margin-top:8px;color:#555}.grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.card{background:#ffffffd9;border:1px solid #d9d3c8;border-radius:7px;overflow:hidden;box-shadow:0 2px 9px #00000012}.card h2{color:#fff;margin:0;padding:13px 22px;font-family:'Yu Mincho',serif;font-size:31px}.card table th,.card table td{text-align:center;font-family:'Yu Mincho',serif;font-size:24px;padding:12px}.card table th{font-size:18px;font-weight:500}.foot{text-align:right;margin-top:25px;font-family:'Yu Mincho',serif;color:#555}.hidden{display:none!important}.status{font-size:13px;color:#666}.loginBox{max-width:440px;margin:60px auto}.loginBox h2{margin-top:0}.loginBox input{width:100%;border:1px solid #ccc;border-radius:8px;padding:12px;margin:5px 0 13px}.error{color:#a33434;font-weight:700;margin-top:10px}.success{color:#315d4e;font-weight:700;margin-top:10px}.loading{opacity:.55;pointer-events:none}.monitorOnly .adminOnly{display:none!important}
+@media(max-width:800px){.grid{grid-template-columns:1fr}.screen{padding:20px}.screenTitle{flex-direction:column}.screenTitle h1{font-size:36px}.screenDate{font-size:20px}.card table td{font-size:18px}.wrap{padding:10px}.top b{font-size:17px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <b>本日のご法要｜管理システム</b>
+    <div class="tabs">
+      <span id="loginState" class="status" style="color:#ddd"></span>
+      <button id="adminTab" class="active adminOnly">管理画面</button>
+      <button id="previewTab">モニター表示</button>
+      <button id="logout" class="adminOnly" style="display:none">ログアウト</button>
+    </div>
+  </div>
+
+  <main id="login" class="wrap">
+    <section class="panel loginBox">
+      <h2>管理者ログイン</h2>
+      <div class="hint" style="margin-bottom:14px">Supabaseで作成した管理者メールアドレスとパスワードを入力してください。</div>
+      <label>メールアドレス</label>
+      <input type="email" id="email" autocomplete="username">
+      <label>パスワード</label>
+      <input type="password" id="password" autocomplete="current-password">
+      <button class="btn primary" id="loginBtn" style="width:100%">ログイン</button>
+      <div id="loginMsg" class="error"></div>
+      <div style="margin-top:18px;text-align:center"><button class="btn ghost" id="monitorWithoutLogin">モニター表示だけ開く</button></div>
+    </section>
+  </main>
+
+  <main id="admin" class="wrap hidden">
+    <section class="panel"><div class="datebox"><div><h2 style="margin:0 0 6px">表示日の設定</h2><div class="hint">予定はSupabaseに保存され、別の端末にも共有されます。</div></div><input type="date" id="date"></div></section>
+    <section class="panel"><h2 style="margin-top:0">予定を登録</h2><div class="row">
+      <div class="field"><label>会場</label><select id="hall"><option>第一会場</option><option>第二会場</option><option>第三会場</option><option>とこしえ</option></select></div>
+      <div class="field"><label>用途</label><select id="purpose"><option>建墓</option><option>埋葬</option><option>建墓・埋葬</option><option>年回</option><option>納骨</option></select></div>
+      <div class="field"><label>時間</label><input type="time" id="time" step="900"></div>
+      <div class="field name"><label>喪家名（「家」は自動表示）</label><div class="suffix"><input id="family" placeholder="例：山田"><span>家</span></div></div>
+      <button type="button" class="btn primary" id="add">＋ 予定を追加</button>
+      <div id="msg" style="width:100%;font-weight:700;margin-top:4px"></div>
+    </div></section>
+    <section class="panel"><div class="row" style="justify-content:space-between"><div><h2 style="margin:0">当日の予定</h2><div class="hint">登録・編集・削除はクラウドへ反映されます。</div></div><div><button class="btn ghost" id="copyPrev">前日をコピー</button> <button class="btn danger" id="clear">全件クリア</button></div></div><div id="lists"></div></section>
+  </main>
+
+  <main id="monitor" class="monitor"><div class="screen"><div class="screenTitle"><h1>本日のご法要</h1><div><div id="screenDate" class="screenDate"></div><div class="screenSub">故人を偲び　心を込めてお手伝いいたします</div></div></div><div class="grid" id="cards"></div><div class="foot">大切な方のご縁を、これからもずっと。</div></div></main>
+</div>
+
 <script>
-const halls=['第一会場','第二会場','第三会場','とこしえ'];const cls=['h1','h2','h3','h4'];const $=s=>document.querySelector(s);const date=$('#date');let editing=null;
-function today(){const d=new Date(), y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), day=String(d.getDate()).padStart(2,'0'); return `${y}-${m}-${day}`} date.value=today();
-const memoryStore={}; function key(d=date.value){return 'houyou-'+d} function load(d=date.value){try{const v=localStorage.getItem(key(d)); if(v!==null)return JSON.parse(v)||[]}catch(e){} return memoryStore[key(d)]||[]} function save(a,d=date.value){memoryStore[key(d)]=a; try{localStorage.setItem(key(d),JSON.stringify(a))}catch(e){} render()}
-function jpTime(t){let [h,m]=t.split(':').map(Number);return (h<12?'午前 ':'午後 ')+((h%12)||12)+':'+String(m).padStart(2,'0')}
-function render(){let a=load();let out='';halls.forEach((h,i)=>{let rows=a.map((x,n)=>({...x,n})).filter(x=>x.hall===h).sort((x,y)=>x.time.localeCompare(y.time));out+=`<div class='hall'><div class='hallhead ${cls[i]}'><span>${h}</span><span>${rows.length}件</span></div><table><thead><tr><th>用途</th><th>時間</th><th>家名</th><th></th></tr></thead><tbody>${rows.length?rows.map(x=>`<tr><td>${x.purpose}</td><td>${jpTime(x.time)}</td><td>${x.family}家</td><td class='actions'><button onclick='edit(${x.n})'>編集</button><button onclick='del(${x.n})'>削除</button></td></tr>`).join(''):`<tr><td colspan='4' class='empty'>予定はありません</td></tr>`}</tbody></table></div>`});$('#lists').innerHTML=out;renderMonitor()}
-function renderMonitor(){let a=load();let d=new Date(date.value+'T00:00:00');let w='日月火水木金土'[d.getDay()];$('#screenDate').textContent=`${d.getFullYear()}年 ${d.getMonth()+1}月 ${d.getDate()}日（${w}）`;$('#cards').innerHTML=halls.map((h,i)=>{let rows=a.filter(x=>x.hall===h).sort((x,y)=>x.time.localeCompare(y.time));return `<div class='card'><h2 class='${cls[i]}'>${h}</h2><table><thead><tr><th>内容</th><th>時間</th><th>家名</th></tr></thead><tbody>${rows.length?rows.map(x=>`<tr><td>${x.purpose}</td><td>${jpTime(x.time)}</td><td>${x.family}家</td></tr>`).join(''):`<tr><td colspan='3' style='color:#aaa'>—</td></tr>`}</tbody></table></div>`}).join('')}
-$('#add').onclick=()=>{let family=$('#family').value.trim().replace(/家$/,'');if(!family||!$('#time').value){$('#msg').textContent='時間と喪家名を入力してください。';return;} $('#msg').textContent='';let a=load(),x={hall:$('#hall').value,purpose:$('#purpose').value,time:$('#time').value,family};if(editing===null)a.push(x);else{a[editing]=x;editing=null;$('#add').textContent='＋ 予定を追加'}save(a);$('#family').value='';$('#time').value='';$('#msg').textContent='予定を登録しました。'};
-window.edit=n=>{let x=load()[n];$('#hall').value=x.hall;$('#purpose').value=x.purpose;$('#time').value=x.time;$('#family').value=x.family;editing=n;$('#add').textContent='変更を保存';scrollTo({top:0,behavior:'smooth'})};window.del=n=>{if(confirm('この予定を削除しますか？')){let a=load();a.splice(n,1);save(a)}};
-$('#clear').onclick=()=>{if(confirm('この日の予定をすべて削除しますか？'))save([])};$('#copyPrev').onclick=()=>{let d=new Date(date.value+'T00:00:00');d.setDate(d.getDate()-1);let prev=d.toISOString().slice(0,10),a=load(prev);if(!a.length)return alert('前日の予定がありません。');if(confirm('前日の予定をこの日にコピーしますか？'))save(a)};date.onchange=render;
-$('#previewTab').onclick=()=>{$('#admin').classList.add('hidden');$('#monitor').style.display='block';$('#adminTab').classList.remove('active');$('#previewTab').classList.add('active');renderMonitor()};$('#adminTab').onclick=()=>{$('#admin').classList.remove('hidden');$('#monitor').style.display='none';$('#adminTab').classList.add('active');$('#previewTab').classList.remove('active')};render();
-</script></body></html>
+const SUPABASE_URL='https://fakokxxouwlgecmwyfev.supabase.co';
+const SUPABASE_KEY='sb_publishable_ZmhX1t32yU9MgOwUyYW_NQ_2-sYCvvs';
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const TABLE='houyou_schedules';
+const halls=['第一会場','第二会場','第三会場','とこしえ'];
+const cls=['h1','h2','h3','h4'];
+const $=s=>document.querySelector(s);
+const date=$('#date');
+let editing=null, rowsCache=[], realtimeChannel=null, currentUser=null;
+
+function today(){const d=new Date(),y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`}
+date.value=today();
+function esc(v=''){return String(v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function jpTime(t){if(!t)return '';let [h,m]=String(t).slice(0,5).split(':').map(Number);return (h<12?'午前 ':'午後 ')+((h%12)||12)+':'+String(m).padStart(2,'0')}
+function setMsg(text,ok=true){$('#msg').className=ok?'success':'error';$('#msg').textContent=text}
+function setBusy(v){document.body.classList.toggle('loading',v)}
+
+async function load(d=date.value){
+  const {data,error}=await db.from(TABLE).select('id,schedule_date,venue,purpose,schedule_time,family_name').eq('schedule_date',d).order('schedule_time',{ascending:true});
+  if(error){console.error(error);setMsg('読み込みエラー：'+error.message,false);return []}
+  return data||[];
+}
+
+async function render(){
+  rowsCache=await load();
+  let out='';
+  halls.forEach((h,i)=>{
+    const rows=rowsCache.filter(x=>x.venue===h);
+    out+=`<div class="hall"><div class="hallhead ${cls[i]}"><span>${h}</span><span>${rows.length}件</span></div><table><thead><tr><th>用途</th><th>時間</th><th>家名</th><th></th></tr></thead><tbody>${rows.length?rows.map(x=>`<tr><td>${esc(x.purpose)}</td><td>${jpTime(x.schedule_time)}</td><td>${esc(x.family_name)}家</td><td class="actions"><button onclick="editRow(${x.id})">編集</button><button onclick="delRow(${x.id})">削除</button></td></tr>`).join(''):`<tr><td colspan="4" class="empty">予定はありません</td></tr>`}</tbody></table></div>`;
+  });
+  $('#lists').innerHTML=out;
+  renderMonitor(rowsCache);
+}
+
+async function renderMonitor(data=null){
+  const a=data||await load();
+  let d=new Date(date.value+'T00:00:00');
+  let w='日月火水木金土'[d.getDay()];
+  $('#screenDate').textContent=`${d.getFullYear()}年 ${d.getMonth()+1}月 ${d.getDate()}日（${w}）`;
+  $('#cards').innerHTML=halls.map((h,i)=>{
+    const rows=a.filter(x=>x.venue===h);
+    return `<div class="card"><h2 class="${cls[i]}">${h}</h2><table><thead><tr><th>内容</th><th>時間</th><th>家名</th></tr></thead><tbody>${rows.length?rows.map(x=>`<tr><td>${esc(x.purpose)}</td><td>${jpTime(x.schedule_time)}</td><td>${esc(x.family_name)}家</td></tr>`).join(''):`<tr><td colspan="3" style="color:#aaa">—</td></tr>`}</tbody></table></div>`;
+  }).join('');
+}
+
+$('#loginBtn').onclick=async()=>{
+  $('#loginMsg').textContent='';
+  const email=$('#email').value.trim(),password=$('#password').value;
+  if(!email||!password){$('#loginMsg').textContent='メールアドレスとパスワードを入力してください。';return}
+  setBusy(true);
+  const {data,error}=await db.auth.signInWithPassword({email,password});
+  setBusy(false);
+  if(error){$('#loginMsg').textContent='ログインできませんでした：'+error.message;return}
+  currentUser=data.user; await showAdmin();
+};
+
+$('#logout').onclick=async()=>{await db.auth.signOut();currentUser=null;showLogin()};
+
+async function showAdmin(){
+  document.body.classList.remove('monitorOnly');
+  $('#login').classList.add('hidden');$('#monitor').style.display='none';$('#admin').classList.remove('hidden');
+  $('#logout').style.display='inline-block';$('#loginState').textContent=currentUser?.email?'ログイン中：'+currentUser.email:'';
+  $('#adminTab').classList.add('active');$('#previewTab').classList.remove('active');
+  await render();
+}
+function showLogin(){
+  document.body.classList.remove('monitorOnly');$('#login').classList.remove('hidden');$('#admin').classList.add('hidden');$('#monitor').style.display='none';$('#logout').style.display='none';$('#loginState').textContent='';
+}
+async function showMonitor(publicMode=false){
+  if(publicMode)document.body.classList.add('monitorOnly');
+  $('#login').classList.add('hidden');$('#admin').classList.add('hidden');$('#monitor').style.display='block';$('#adminTab').classList.remove('active');$('#previewTab').classList.add('active');
+  await renderMonitor();
+}
+$('#monitorWithoutLogin').onclick=()=>showMonitor(true);
+$('#previewTab').onclick=()=>showMonitor(!currentUser);
+$('#adminTab').onclick=()=>currentUser?showAdmin():showLogin();
+
+date.onchange=async()=>{editing=null;$('#add').textContent='＋ 予定を追加';await render()};
+
+$('#add').onclick=async()=>{
+  if(!currentUser){setMsg('登録には管理者ログインが必要です。',false);return}
+  let family=$('#family').value.trim().replace(/家$/,'');
+  if(!family||!$('#time').value){setMsg('時間と喪家名を入力してください。',false);return}
+  const payload={schedule_date:date.value,venue:$('#hall').value,purpose:$('#purpose').value,schedule_time:$('#time').value,family_name:family};
+  setBusy(true);
+  let error;
+  if(editing===null)({error}=await db.from(TABLE).insert(payload));
+  else ({error}=await db.from(TABLE).update(payload).eq('id',editing));
+  setBusy(false);
+  if(error){setMsg('保存エラー：'+error.message,false);return}
+  editing=null;$('#add').textContent='＋ 予定を追加';$('#family').value='';$('#time').value='';setMsg('予定を保存しました。');await render();
+};
+
+window.editRow=id=>{
+  const x=rowsCache.find(r=>Number(r.id)===Number(id));if(!x)return;
+  $('#hall').value=x.venue;$('#purpose').value=x.purpose;$('#time').value=String(x.schedule_time).slice(0,5);$('#family').value=x.family_name;editing=x.id;$('#add').textContent='変更を保存';window.scrollTo({top:0,behavior:'smooth'});
+};
+window.delRow=async id=>{
+  if(!currentUser||!confirm('この予定を削除しますか？'))return;
+  const {error}=await db.from(TABLE).delete().eq('id',id);
+  if(error){setMsg('削除エラー：'+error.message,false);return}setMsg('削除しました。');await render();
+};
+
+$('#clear').onclick=async()=>{
+  if(!currentUser||!confirm('この日の予定をすべて削除しますか？'))return;
+  const ids=rowsCache.map(x=>x.id);if(!ids.length)return;
+  const {error}=await db.from(TABLE).delete().in('id',ids);
+  if(error){setMsg('削除エラー：'+error.message,false);return}setMsg('この日の予定をすべて削除しました。');await render();
+};
+
+$('#copyPrev').onclick=async()=>{
+  if(!currentUser)return;
+  let d=new Date(date.value+'T00:00:00');d.setDate(d.getDate()-1);
+  const prev=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  const {data,error}=await db.from(TABLE).select('venue,purpose,schedule_time,family_name').eq('schedule_date',prev);
+  if(error){setMsg('前日の読み込みエラー：'+error.message,false);return}
+  if(!data?.length){alert('前日の予定がありません。');return}
+  if(!confirm('前日の予定をこの日にコピーしますか？'))return;
+  const copied=data.map(x=>({...x,schedule_date:date.value}));
+  const {error:insertError}=await db.from(TABLE).insert(copied);
+  if(insertError){setMsg('コピーエラー：'+insertError.message,false);return}setMsg('前日の予定をコピーしました。');await render();
+};
+
+function startRealtime(){
+  realtimeChannel=db.channel('houyou-monitor-live').on('postgres_changes',{event:'*',schema:'public',table:TABLE},async()=>{
+    if($('#monitor').style.display==='block')await renderMonitor();else if(currentUser)await render();
+  }).subscribe();
+}
+
+(async()=>{
+  const {data:{session}}=await db.auth.getSession();
+  currentUser=session?.user||null;
+  if(currentUser)await showAdmin();else showLogin();
+  startRealtime();
+})();
+</script>
+</body>
+</html>

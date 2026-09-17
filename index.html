@@ -36,7 +36,20 @@
     </section>
   </main>
 
-  <main id="admin" class="wrap hidden">
+  <main id="resetPassword" class="wrap hidden">
+     <section class="panel loginBox">
+       <h2>新しいパスワードを設定</h2>
+       <div class="hint" style="margin-bottom:14px">新しいパスワードを2回入力してください。</div>
+       <label>新しいパスワード</label>
+       <input type="password" id="newPassword" autocomplete="new-password">
+       <label>新しいパスワード（確認）</label>
+       <input type="password" id="newPassword2" autocomplete="new-password">
+       <button class="btn primary" id="savePasswordBtn" style="width:100%">新しいパスワードを保存</button>
+       <div id="resetMsg" class="error"></div>
+     </section>
+   </main>
+
+   <main id="admin" class="wrap hidden">
     <section class="panel"><div class="datebox"><div><h2 style="margin:0 0 6px">表示日の設定</h2><div class="hint">予定はSupabaseに保存され、別の端末にも共有されます。</div></div><input type="date" id="date"></div></section>
     <section class="panel"><h2 style="margin-top:0">予定を登録</h2><div class="row">
       <div class="field"><label>会場</label><select id="hall"><option>第一会場</option><option>第二会場</option><option>第三会場</option><option>とこしえ</option></select></div>
@@ -109,7 +122,7 @@ $('#loginBtn').onclick=async()=>{
   currentUser=data.user; await showAdmin();
 };
 
-$('#logout').onclick=async()=>{await db.auth.signOut();currentUser=null;showLogin()};
+$('#logout').onclick=async()=>{await db.auth.signOut();currentUser=null;showLogin()};\n\n$('#forgotBtn').onclick=async()=>{\n  const email=$('#email').value.trim();\n  $('#loginMsg').textContent='';\n  if(!email){$('#loginMsg').textContent='先にメールアドレスを入力してください。';return}\n  setBusy(true);\n  const redirectTo=location.origin+location.pathname;\n  const {error}=await db.auth.resetPasswordForEmail(email,{redirectTo});\n  setBusy(false);\n  if(error){$('#loginMsg').textContent='再設定メールを送れませんでした：'+error.message;return}\n  $('#loginMsg').className='success';\n  $('#loginMsg').textContent='パスワード再設定メールを送りました。メール内のリンクを開いてください。';\n};\n\n$('#savePasswordBtn').onclick=async()=>{\n  const p1=$('#newPassword').value,p2=$('#newPassword2').value;\n  $('#resetMsg').className='error';$('#resetMsg').textContent='';\n  if(p1.length<6){$('#resetMsg').textContent='パスワードは6文字以上で入力してください。';return}\n  if(p1!==p2){$('#resetMsg').textContent='確認用パスワードが一致しません。';return}\n  setBusy(true);\n  const {error}=await db.auth.updateUser({password:p1});\n  setBusy(false);\n  if(error){$('#resetMsg').textContent='パスワードを変更できませんでした：'+error.message;return}\n  $('#resetMsg').className='success';$('#resetMsg').textContent='パスワードを変更しました。管理画面を開きます。';\n  const {data:{session}}=await db.auth.getSession();currentUser=session?.user||null;\n  setTimeout(()=>showAdmin(),700);\n};\n\nfunction showResetPassword(){\n  $('#login').classList.add('hidden');$('#admin').classList.add('hidden');$('#monitor').style.display='none';$('#resetPassword').classList.remove('hidden');\n}\n
 
 async function showAdmin(){
   document.body.classList.remove('monitorOnly');
@@ -119,11 +132,11 @@ async function showAdmin(){
   await render();
 }
 function showLogin(){
-  document.body.classList.remove('monitorOnly');$('#login').classList.remove('hidden');$('#admin').classList.add('hidden');$('#monitor').style.display='none';$('#logout').style.display='none';$('#loginState').textContent='';
+  document.body.classList.remove('monitorOnly');$('#resetPassword').classList.add('hidden');$('#login').classList.remove('hidden');$('#admin').classList.add('hidden');$('#monitor').style.display='none';$('#logout').style.display='none';$('#loginState').textContent='';
 }
 async function showMonitor(publicMode=false){
   if(publicMode)document.body.classList.add('monitorOnly');
-  $('#login').classList.add('hidden');$('#admin').classList.add('hidden');$('#monitor').style.display='block';$('#adminTab').classList.remove('active');$('#previewTab').classList.add('active');
+  $('#resetPassword').classList.add('hidden');$('#login').classList.add('hidden');$('#admin').classList.add('hidden');$('#monitor').style.display='block';$('#adminTab').classList.remove('active');$('#previewTab').classList.add('active');
   await renderMonitor();
 }
 $('#monitorWithoutLogin').onclick=()=>showMonitor(true);
@@ -186,7 +199,8 @@ function startRealtime(){
   const {data:{session}}=await db.auth.getSession();
   currentUser=session?.user||null;
   if(currentUser)await showAdmin();else showLogin();
-  startRealtime();
+  db.auth.onAuthStateChange((event,session)=>{if(event==='PASSWORD_RECOVERY'){currentUser=session?.user||null;setTimeout(showResetPassword,0)}});
+   startRealtime();
 })();
 </script>
 </body>

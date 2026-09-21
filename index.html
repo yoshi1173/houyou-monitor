@@ -9,6 +9,10 @@
 :root{--ink:#20252a;--muted:#6d716d;--paper:#f7f4ed;--line:#d9d2c4;--green:#3f6256;--gold:#a58a55;--rose:#806260;--navy:#525b70}*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Yu Mincho','Hiragino Mincho ProN','Yu Gothic',sans-serif;color:var(--ink);background:#ebe8e1}button,input,select{font:inherit}.app{min-height:100vh}.top{min-height:64px;background:#20272a;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:10px 22px;gap:12px;flex-wrap:wrap}.top b{font-size:21px}.tabs{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.tabs button{border:0;padding:10px 16px;border-radius:8px;cursor:pointer}.tabs .active{background:#fff;color:#222}.wrap{max-width:1450px;margin:auto;padding:22px}.panel{background:#fff;border-radius:14px;box-shadow:0 3px 18px #0001;padding:20px;margin-bottom:18px}.row{display:flex;gap:14px;align-items:end;flex-wrap:wrap}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:13px;color:#666;font-weight:700}.field input,.field select{border:1px solid #cfcfcf;border-radius:8px;padding:10px 12px;background:white;min-height:43px}.field.name input{width:170px}.suffix{display:flex;align-items:center;gap:8px}.suffix span{font-size:19px;font-weight:700}.btn{border:0;border-radius:8px;padding:11px 18px;font-weight:700;cursor:pointer}.primary{background:#405e53;color:white}.ghost{background:#eee}.danger{background:#f4e3e3;color:#8a3333}.datebox{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}.datebox input{font-size:17px;padding:9px}.hint{color:#777;font-size:13px}.hall{border:1px solid var(--line);border-radius:11px;overflow:hidden;margin-top:15px}.hallhead{padding:11px 15px;color:#fff;font-weight:800;display:flex;justify-content:space-between}.h1{background:var(--navy)}.h2{background:var(--green)}.h3{background:var(--rose)}.h4{background:var(--gold)}table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid #eee;text-align:left}th{background:#fafafa;font-size:13px}.actions button{margin-right:5px;padding:6px 9px;border:0;border-radius:6px;cursor:pointer}.empty{text-align:center;color:#999;padding:15px}.monitor{display:none;background:var(--paper);min-height:calc(100vh - 64px);position:relative;overflow:hidden}.monitor:before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 8% 90%,#b8c8b733 0 8%,transparent 9%),linear-gradient(120deg,transparent 65%,#c6aa7030 66%,transparent 68%);pointer-events:none}.screen{position:relative;max-width:1600px;margin:auto;padding:35px 55px}.screenTitle{display:flex;justify-content:space-between;align-items:start;border-bottom:1px solid #c7b78f;padding-bottom:14px;margin-bottom:24px;gap:20px}.screenTitle h1{font-family:'Yu Mincho','Hiragino Mincho ProN',serif;font-size:56px;margin:0;font-weight:600}.screenDate{font-family:'Yu Mincho',serif;font-size:30px}.screenSub{font-size:15px;margin-top:8px;color:#555}.grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.card{background:#ffffffd9;border:1px solid #d9d3c8;border-radius:7px;overflow:hidden;box-shadow:0 2px 9px #00000012}.card h2{color:#fff;margin:0;padding:13px 22px;font-family:'Yu Mincho',serif;font-size:31px}.card table th,.card table td{text-align:center;font-family:'Yu Mincho',serif;font-size:24px;padding:12px}.card table th{font-size:18px;font-weight:500}.foot{text-align:right;margin-top:25px;font-family:'Yu Mincho',serif;color:#555}.hidden{display:none!important}.status{font-size:13px;color:#666}.loginBox{max-width:440px;margin:60px auto}.loginBox h2{margin-top:0}.loginBox input{width:100%;border:1px solid #ccc;border-radius:8px;padding:12px;margin:5px 0 13px}.error{color:#a33434;font-weight:700;margin-top:10px}.success{color:#315d4e;font-weight:700;margin-top:10px}.loading{opacity:.55;pointer-events:none}.monitorOnly .adminOnly{display:none!important}
 @media(max-width:800px){.grid{grid-template-columns:1fr}.screen{padding:20px}.screenTitle{flex-direction:column}.screenTitle h1{font-size:36px}.screenDate{font-size:20px}.card table td{font-size:18px}.wrap{padding:10px}.top b{font-size:17px}}
 td{font-size:20px;font-weight:600;}
+.monitor .screenTitle h1{font-size:42px;}
+.monitor .screenDate{font-size:28px;font-weight:700;}
+.monitor .screenSub{font-size:18px;font-weight:600;}
+.monitor .card th:first-child{letter-spacing:.5em;}
 </style>
 </head>
 <body>
@@ -55,7 +59,7 @@ td{font-size:20px;font-weight:600;}
     <section class="panel"><h2 style="margin-top:0">予定を登録</h2><div class="row">
       <div class="field"><label>会場</label><select id="hall"><option>第一会場</option><option>第二会場</option><option>第三会場</option><option>家族葬会場とこしえ</option></select></div>
       <div class="field"><label>用途</label><select id="purpose"><option>建墓</option><option>埋葬</option><option>建墓・埋葬</option><option>年回</option><option>納骨</option></select></div>
-      <div class="field"><label>時間</label><input type="time" id="time" step="900"></div>
+      <div class="field"><label>時間</label><div style="display:flex;align-items:center;gap:8px"><input type="time" id="time" step="900"><span id="endTimeWrap" style="display:none;align-items:center;gap:8px"><span>〜</span><input type="time" id="endTime" step="900"></span></div></div>
       <div class="field name"><label>喪家名（「家」は自動表示）</label><div class="suffix"><input id="family" placeholder="例：山田"><span>家</span></div></div>
       <button type="button" class="btn primary" id="add">＋ 予定を追加</button>
       <div id="msg" style="width:100%;font-weight:700;margin-top:4px"></div>
@@ -75,6 +79,9 @@ const halls=['第一会場','第二会場','第三会場','家族葬会場とこ
 const cls=['h1','h2','h3','h4'];
 const $=s=>document.querySelector(s);
 const date=$('#date');
+const hall=$('#hall'),purpose=$('#purpose'),endTimeWrap=$('#endTimeWrap'),endTime=$('#endTime');
+function updatePurpose(){const isToko=hall.value==='家族葬会場とこしえ';let funeral=[...purpose.options].find(o=>o.value==='葬儀');if(isToko&&!funeral){funeral=new Option('葬儀','葬儀');purpose.add(funeral)}else if(!isToko&&funeral){if(purpose.value==='葬儀')purpose.value='建墓';funeral.remove()}const isFuneral=isToko&&purpose.value==='葬儀';endTimeWrap.style.display=isFuneral?'inline-flex':'none';if(!isFuneral)endTime.value='';} 
+ hall.onchange=updatePurpose;purpose.onchange=updatePurpose;updatePurpose(); 
 let editing=null, rowsCache=[], realtimeChannel=null, currentUser=null;
 
 function today(){const d=new Date(),y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`}
@@ -85,7 +92,7 @@ function setMsg(text,ok=true){$('#msg').className=ok?'success':'error';$('#msg')
 function setBusy(v){document.body.classList.toggle('loading',v)}
 
 async function load(d=date.value){
-  const {data,error}=await db.from(TABLE).select('id,schedule_date,venue,purpose,schedule_time,family_name').eq('schedule_date',d).order('schedule_time',{ascending:true});
+  const {data,error}=await db.from(TABLE).select('id,schedule_date,venue,purpose,schedule_time,end_time,family_name').eq('schedule_date',d).order('schedule_time',{ascending:true});
   if(error){console.error(error);setMsg('読み込みエラー：'+error.message,false);return []}
   return data||[];
 }
@@ -108,7 +115,7 @@ async function renderMonitor(data=null){
   $('#screenDate').textContent=`${d.getFullYear()}年 ${d.getMonth()+1}月 ${d.getDate()}日（${w}）`;
   $('#cards').innerHTML=halls.map((h,i)=>{
     const rows=a.filter(x=>x.venue===h);
-    return `<div class="card"><h2 class="${cls[i]}">${h}</h2><table><thead><tr><th>内容</th><th>時間</th><th>家名</th></tr></thead><tbody>${rows.length?rows.map(x=>`<tr><td>${esc(x.purpose)}</td><td>${jpTime(x.schedule_time)}</td><td>${esc(x.family_name)}家</td></tr>`).join(''):`<tr><td colspan="3" style="color:#aaa">—</td></tr>`}</tbody></table></div>`;
+    return `<div class="card"><h2 class="${cls[i]}">${h}</h2><table><thead><tr><th>内容</th><th>時間</th><th>家名</th></tr></thead><tbody>${rows.length?rows.map(x=>`<tr><td>${esc(x.purpose)}</td><td>${x.purpose==='葬儀'&&x.end_time?jpTime(x.schedule_time)+' ～ '+jpTime(x.end_time):jpTime(x.schedule_time)}</td><td>${esc(x.family_name)}<span style="font-size:.82em;margin-left:.35em;">家</span></td></tr>`).join(''):`<tr><td colspan="3" style="color:#aaa">—</td></tr>`}</tbody></table></div>`;
   }).join('');
 }
 
@@ -139,6 +146,7 @@ async function showMonitor(publicMode=false){
   if(publicMode)document.body.classList.add('monitorOnly');
   $('#resetPassword').classList.add('hidden');$('#login').classList.add('hidden');$('#admin').classList.add('hidden');$('#monitor').style.display='block';$('#adminTab').classList.remove('active');$('#previewTab').classList.add('active');
   await renderMonitor();
+if(!document.fullscreenElement){document.documentElement.requestFullscreen().catch(()=>{});}  
 }
 $('#monitorWithoutLogin').onclick=()=>showMonitor(true);
 $('#previewTab').onclick=()=>showMonitor(!currentUser);
@@ -150,7 +158,8 @@ $('#add').onclick=async()=>{
   if(!currentUser){setMsg('登録には管理者ログインが必要です。',false);return}
   let family=$('#family').value.trim().replace(/家$/,'');
   if(!family||!$('#time').value){setMsg('時間と喪家名を入力してください。',false);return}
-  const payload={schedule_date:date.value,venue:$('#hall').value,purpose:$('#purpose').value,schedule_time:$('#time').value,family_name:family};
+  if(purpose.value==='葬儀'&&!endTime.value){setMsg('葬儀の終了時間を入力してください。',false);return}
+  const payload={schedule_date:date.value,venue:$('#hall').value,purpose:$('#purpose').value,schedule_time:$('#time').value,end_time:purpose.value==='葬儀'?endTime.value:null,family_name:family};
   setBusy(true);
   let error;
   if(editing===null)({error}=await db.from(TABLE).insert(payload));
@@ -162,7 +171,7 @@ $('#add').onclick=async()=>{
 
 window.editRow=id=>{
   const x=rowsCache.find(r=>Number(r.id)===Number(id));if(!x)return;
-  $('#hall').value=x.venue;$('#purpose').value=x.purpose;$('#time').value=String(x.schedule_time).slice(0,5);$('#family').value=x.family_name;editing=x.id;$('#add').textContent='変更を保存';window.scrollTo({top:0,behavior:'smooth'});
+  $('#hall').value=x.venue;$('#purpose').value=x.purpose;$('#time').value=String(x.schedule_time).slice(0,5);$('#family').value=x.family_name;endTime.value=x.end_time?String(x.end_time).slice(0,5):'';updatePurpose();editing=x.id;$('#add').textContent='変更を保存';window.scrollTo({top:0,behavior:'smooth'});
 };
 window.delRow=async id=>{
   if(!currentUser||!confirm('この予定を削除しますか？'))return;
@@ -181,7 +190,7 @@ $('#copyPrev').onclick=async()=>{
   if(!currentUser)return;
   let d=new Date(date.value+'T00:00:00');d.setDate(d.getDate()-1);
   const prev=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-  const {data,error}=await db.from(TABLE).select('venue,purpose,schedule_time,family_name').eq('schedule_date',prev);
+  const {data,error}=await db.from(TABLE).select('venue,purpose,schedule_time,end_time,family_name').eq('schedule_date',prev);
   if(error){setMsg('前日の読み込みエラー：'+error.message,false);return}
   if(!data?.length){alert('前日の予定がありません。');return}
   if(!confirm('前日の予定をこの日にコピーしますか？'))return;

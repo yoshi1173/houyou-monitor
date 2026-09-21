@@ -113,7 +113,7 @@ async function renderMonitor(data=null){
   let d=new Date(date.value+'T00:00:00');
   let w='日月火水木金土'[d.getDay()];
   $('#screenDate').textContent=`${d.getFullYear()}年 ${d.getMonth()+1}月 ${d.getDate()}日（${w}）`;
-  $('#cards').innerHTML=halls.map((h,i)=>{
+ $("#cards").innerHTML=halls.filter(h=>a.some(x=>x.venue===h)).map((h,i)=>{ 
     const rows=a.filter(x=>x.venue===h);
     return `<div class="card"><h2 class="${cls[i]}">${h}</h2><table><thead><tr><th>内容</th><th>時間</th><th>家名</th></tr></thead><tbody>${rows.length?rows.map(x=>`<tr><td>${esc(x.purpose)}</td><td>${x.purpose==='葬儀'&&x.end_time?jpTime(x.schedule_time)+' ～ '+jpTime(x.end_time):jpTime(x.schedule_time)}</td><td>${esc(x.family_name)}<span style="font-size:.82em;margin-left:.35em;">家</span></td></tr>`).join(''):`<tr><td colspan="3" style="color:#aaa">—</td></tr>`}</tbody></table></div>`;
   }).join('');

@@ -149,7 +149,7 @@ function showLogin(){
   document.body.classList.remove('monitorOnly');$('#resetPassword').classList.add('hidden');$('#login').classList.remove('hidden');$('#admin').classList.add('hidden');$('#monitor').style.display='none';$('#logout').style.display='none';$('#loginState').textContent='';
 }
 async function showMonitor(publicMode=false){
-  if(publicMode)document.body.classList.add('monitorOnly');
+document.body.classList.add('monitorOnly');
   $('#resetPassword').classList.add('hidden');$('#login').classList.add('hidden');$('#admin').classList.add('hidden');$('#monitor').style.display='block';$('#adminTab').classList.remove('active');$('#previewTab').classList.add('active');
   await renderMonitor();
 if(!document.fullscreenElement){document.documentElement.requestFullscreen().catch(()=>{});}  
